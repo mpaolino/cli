@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/semaphoreci/cli/cmd/pipelines"
 	"github.com/semaphoreci/cli/cmd/utils"
 
 	client "github.com/semaphoreci/cli/api/client"
@@ -154,6 +155,41 @@ var CreateSecretCmd = &cobra.Command{
 	},
 }
 
+var CreatePipelineCmd = &cobra.Command{
+	Use:     "pipeline [NAME]",
+	Short:   "Create a pipeline based on existing pipelin - partial reuild.",
+	Long:    ``,
+	Aliases: []string{"pipelines", "ppl"},
+	Args:    cobra.ExactArgs(0),
+
+	Run: func(cmd *cobra.Command, args []string) {
+		// name := args[0]
+		//
+		// c := client.NewDashboardV1AlphaApi()
+		//
+		// dash := models.NewDashboardV1Alpha(name)
+		// _, err := c.CreateDashboard(&dash)
+		//
+		// utils.Check(err)
+		//
+		partialRebuildFlags, err := cmd.Flags().GetBool("partial-rebuild")
+		utils.Check(err)
+		fmt.Printf("qwerty\n", partialRebuildFlags)
+
+		switch {
+		case partialRebuildFlags:
+			idFlags, err := cmd.Flags().GetString("id")
+			utils.Check(err)
+
+			pipelines.Create(idFlags)
+			fmt.Printf("Partial reuiild!!!.\n", "pera")
+
+		case true:
+			fmt.Printf("Dashboard '%s' created.\n", "pera")
+		}
+	},
+}
+
 func encodeFromFileAt(path string) string {
 	content, err := ioutil.ReadFile(path)
 	utils.Check(err)
@@ -168,6 +204,7 @@ func init() {
 	createCmd.AddCommand(CreateSecretCmd)
 	createCmd.AddCommand(CreateDashboardCmd)
 	createCmd.AddCommand(createJobCmd)
+	createCmd.AddCommand(CreatePipelineCmd)
 
 	// Create Flags
 
@@ -178,4 +215,8 @@ func init() {
 
 	desc = "File mapping <local-path>:<mount-path>, used to create a secret with file"
 	CreateSecretCmd.Flags().StringArrayP("file", "f", []string{}, desc)
+
+	CreatePipelineCmd.Flags().BoolVar(&GetJobAllStates, "partial-rebuild", false, "list all jobs including finished ones")
+	CreatePipelineCmd.Flags().StringP("id", "", "", desc)
+
 }

@@ -17,6 +17,12 @@ type PipelineV1Alpha struct {
 	} `json:"pipeline,omitempty"`
 }
 
+type PipelineV1AlphaPartialRebuildRequest struct {
+	ScheduleType string `json:"schedule_type"`
+	PplToRebuild string `json:"ppl_to_rebuild"`
+	RequestToken string `json:"request_token"`
+}
+
 func NewPipelineV1AlphaFromJson(data []byte) (*PipelineV1Alpha, error) {
 	j := PipelineV1Alpha{}
 
@@ -35,4 +41,12 @@ func (j *PipelineV1Alpha) ToYaml() ([]byte, error) {
 
 func (j *PipelineV1Alpha) IsDone() bool {
 	return j.Pipeline.State == "done"
+}
+
+func NewPipelineV1AlphaPartialRebuildRequest(scheduleType string, pplId string, reqToken string) (*PipelineV1AlphaPartialRebuildRequest, error) {
+	j := PipelineV1AlphaPartialRebuildRequest{}
+	j.ScheduleType = scheduleType
+	j.PplToRebuild = pplId
+	j.RequestToken = reqToken
+	return &j, nil
 }

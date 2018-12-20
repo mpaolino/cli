@@ -21,3 +21,4 @@ Homebrew (latest stable version)
 ```bash
 brew install semaphoreci/tap/sem
 ```
+

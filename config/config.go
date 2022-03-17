@@ -69,11 +69,11 @@ func GetEditor() string {
 	}
 }
 
-func SetAuth(token string) {
+func SetAuth(token string) error {
 	context := GetActiveContext()
 	key_path := fmt.Sprintf("contexts.%s.auth.token", context)
 
-	Set(key_path, token)
+	return Set(key_path, token)
 }
 
 func GetHost() string {
@@ -87,16 +87,20 @@ func GetHost() string {
 	}
 }
 
-func SetHost(token string) {
+func SetHost(token string) error {
 	context := GetActiveContext()
 	key_path := fmt.Sprintf("contexts.%s.host", context)
 
-	Set(key_path, token)
+	return Set(key_path, token)
 }
 
-func Set(key string, value string) {
+func Set(key string, value string) error {
 	viper.Set(key, value)
-	viper.WriteConfig()
+	err := viper.WriteConfig()
+	if err != nil {
+		return fmt.Errorf("failed to write value to config file: %s", err)
+	}
+	return nil
 }
 
 func Get(key string) string {

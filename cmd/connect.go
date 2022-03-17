@@ -33,8 +33,16 @@ var connectCmd = &cobra.Command{
 		name := strings.Replace(host, ".", "_", -1)
 
 		config.SetActiveContext(name)
-		config.SetAuth(token)
-		config.SetHost(host)
+
+		err = config.SetAuth(token)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "%s", err)
+		}
+
+		err = config.SetHost(host)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "%s", err)
+		}
 
 		cmd.Printf("connected to %s\n", host)
 	},
